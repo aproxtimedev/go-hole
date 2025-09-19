@@ -35,12 +35,12 @@ func GetConfig() *Config {
 	return ConfigInstance
 }
 
-func (c *Config) ReadConfig() {
+func (c *Config) ReadConfig(filename string) {
 	configPath, err := os.Getwd()
 	if (err != nil) || (configPath == "") {
 		log.Fatalln("could neither get system config dir nor current working dir")
 	}
-	configPath = filepath.Join(configPath, "config.yaml")
+	configPath = filepath.Join(configPath, filename)
 	data, err := os.ReadFile(configPath)
 	if err != nil {
 		log.Fatalf("could not read config yaml from %s\n", configPath)
