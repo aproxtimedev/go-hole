@@ -6,9 +6,13 @@ upstream:
   - 8.8.8.8:53
   - 8.8.4.4:53
 
-# One or more Blacklist sources
-blacklistUrls:
-  - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+# Example, block youtube
+blacklist:
+  - "youtube.com"
+  - "*.youtube.com"
+  - "*.googlevideo.com"
+  - "*.ytimg.com"
+  - "*.ggpht.com"
 
 # Blacklist renewal interval in minutes - set to 0 to disable
 blacklistRenewal: 1440

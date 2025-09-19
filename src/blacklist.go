@@ -36,6 +36,13 @@ func isBlacklisted(name string) bool {
 		if cur == name {
 			return true
 		}
+
+		if strings.HasPrefix(cur, "*.") {
+            suffix := cur[2:]
+            if strings.HasSuffix(name, suffix) && name != suffix {
+                return true
+            }
+        }
 	}
 	return false
 }
@@ -54,6 +61,9 @@ func updateBlacklistRecords() {
 	list := make([]string, 0)
 	for _, url := range GetConfig().BlacklistSources {
 		processBlacklistSource(url, &list)
+	}
+	for _, value := range GetConfig().Blacklist {
+		processBlacklist(value, &list)
 	}
 	blacklistRecords = list
 	log.Printf("Blacklist database updated, %d records\n", len(blacklistRecords))
@@ -100,6 +110,19 @@ func processBlacklistSource(url string, list *[]string) error {
 					*list = append(*list, strings.ToLower(split[0])+".")
 				}
 			}
+		}
+	}
+	return nil
+}
+
+func processBlacklist(input string, list *[]string) error {
+	re := regexp.MustCompile(`\s+`)
+	split := re.Split(input, -1)
+	if isValidBlacklistSourceRecord(split) {
+		if len(split) == 2 {
+			*list = append(*list, strings.ToLower(split[1])+".")
+		} else if len(split) == 1 {
+			*list = append(*list, strings.ToLower(split[0])+".")
 		}
 	}
 	return nil
